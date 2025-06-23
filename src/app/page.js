@@ -21,12 +21,23 @@ export default function PetTinder() {
         console.error('Error fetching pets:', error);
       }
     }
+
     fetchPets();
   }, []);
 
   const saveForLater = async (pet) => {
     try {
-      await axios.post('/api/savePet', { pet });
+      await axios.post('/api/savePet', {
+        petName: pet.petName,
+        gender: pet.gender,
+        location: pet.location,
+        ownerName: pet.ownerName,
+        postedOn: pet.postedOn,
+        age: pet.age,
+        imageUrl: pet.imageUrl,
+        adoptionLink: pet.adoptionLink,
+      });
+
       setMessage('✅ Pet saved for later!');
       setTimeout(() => setMessage(''), 3000);
     } catch (error) {
@@ -133,3 +144,4 @@ export default function PetTinder() {
     </div>
   );
 }
+
