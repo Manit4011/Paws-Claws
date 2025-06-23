@@ -1,10 +1,10 @@
 import { NextResponse } from "next/server";
 import ConnectDB from "@/lib/db";
-import { Savedpet } from "@/models/savedpet";
-
-await ConnectDB();
+import { Savedpet } from "@/lib/models/petschema";
 
 export async function POST(req) {
+  await ConnectDB(); 
+
   try {
     const {
       petName,
@@ -14,7 +14,7 @@ export async function POST(req) {
       postedOn,
       age,
       imageUrl,
-      adoptionLink
+      adoptionLink,
     } = await req.json();
 
     if (!petName || !gender || !location || !ownerName) {
@@ -25,14 +25,14 @@ export async function POST(req) {
     }
 
     const pet = await Savedpet.create({
-      petname: petName,
+      petName,
       gender,
       location,
-      owner: ownerName,
+      ownerName,
       postedOn,
       age,
       imageUrl,
-      adoptionLink
+      adoptionLink,
     });
 
     return NextResponse.json({ message: "Pet saved successfully", pet });

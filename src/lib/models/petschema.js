@@ -2,17 +2,19 @@ import mongoose from "mongoose";
 
 const petschema = new mongoose.Schema(
   {
-    petname: { type: String, required: true },
+    petName: { type: String, required: true },
     gender: { type: String, required: true },
     location: { type: String, required: true },
-    owner: { type: String, required: true },
+    ownerName: { type: String, required: true },
     postedOn: { type: String },
     age: { type: String },
     imageUrl: { type: String },
-    adoptionLink: { type: String }
+    adoptionLink: { type: String },
+    userid:{type : mongoose.ObjectId, required:true}
   },
   { timestamps: true }
 );
 
 export const Savedpet =
-  mongoose.models.savedpets || mongoose.model("savedpets", petschema);
+  mongoose.models.Savedpet || mongoose.model("Savedpet", petschema);
+

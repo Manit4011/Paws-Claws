@@ -27,11 +27,11 @@ export default function PetTinder() {
 
   const saveForLater = async (pet) => {
     try {
-      await axios.post('/api/savePet', {
-        petName: pet.petName,
+      await axios.post('/api/saveforlater', {
+        petName: pet.petName || pet.petname,
         gender: pet.gender,
         location: pet.location,
-        ownerName: pet.ownerName,
+        ownerName: pet.ownerName || pet.owner,
         postedOn: pet.postedOn,
         age: pet.age,
         imageUrl: pet.imageUrl,
@@ -78,12 +78,12 @@ export default function PetTinder() {
         }`}
       >
         <h2 className="text-2xl font-semibold text-gray-700 mb-4 text-center">
-          {currentPet.petName}
+          {currentPet.petName || currentPet.petname}
         </h2>
         <div className="relative w-full h-72 mb-4 rounded-lg overflow-hidden">
           <Image
             src={currentPet.imageUrl}
-            alt={currentPet.petName}
+            alt={currentPet.petName || currentPet.petname}
             fill
             style={{ objectFit: 'cover' }}
             className="hover:scale-105 transition-transform duration-300"
@@ -103,7 +103,7 @@ export default function PetTinder() {
             <span className="font-medium">Location:</span> {currentPet.location}
           </p>
           <p>
-            <span className="font-medium">Owner:</span> {currentPet.ownerName}
+            <span className="font-medium">Owner:</span> {currentPet.ownerName || currentPet.owner}
           </p>
         </div>
 

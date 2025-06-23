@@ -15,7 +15,7 @@ const loadDB = async () => {
 
 loadDB();
 
-export const runtime = "nodejs"; // Ensure it's not edge
+export const runtime = "nodejs"; 
 
 export async function GET() {
   try {
