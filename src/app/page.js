@@ -10,6 +10,7 @@ export default function PetTinder() {
   const [showAdoptionLink, setShowAdoptionLink] = useState(false);
   const [fade, setFade] = useState(true);
   const [message, setMessage] = useState('');
+  const [userid, setUserid] = useState("68593f3167b085ac6e2b66be");
 
   useEffect(() => {
     async function fetchPets() {
@@ -36,6 +37,7 @@ export default function PetTinder() {
         age: pet.age,
         imageUrl: pet.imageUrl,
         adoptionLink: pet.adoptionLink,
+        userid: userid
       });
 
       setMessage('✅ Pet saved for later!');

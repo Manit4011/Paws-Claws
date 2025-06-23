@@ -15,6 +15,7 @@ export async function POST(req) {
       age,
       imageUrl,
       adoptionLink,
+      userid
     } = await req.json();
 
     if (!petName || !gender || !location || !ownerName) {
@@ -33,6 +34,7 @@ export async function POST(req) {
       age,
       imageUrl,
       adoptionLink,
+      userid
     });
 
     return NextResponse.json({ message: "Pet saved successfully", pet });
