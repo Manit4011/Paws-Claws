@@ -1,10 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { motion } from 'framer-motion';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
-import { useContext } from 'react';
 import UserContext from '@/context/userContext';
 
 export default function LoginPage() {
@@ -22,22 +21,21 @@ export default function LoginPage() {
   };
 
   const handleSubmit = async (e) => {
-  e.preventDefault();
-  setError('');
-  setSuccess('');
+    e.preventDefault();
+    setError('');
+    setSuccess('');
 
-  try {
-    const res = await axios.post('/api/auth/login', formData);
-    if (res.status === 200) {
-      setUser(res.data); // ✅ Update user context right away
-      setSuccess(res.data.message || 'Login successful!');
-      router.push('/');
+    try {
+      const res = await axios.post('/api/auth/login', formData);
+      if (res.status === 200) {
+        setUser(res.data);
+        setSuccess(res.data.message || 'Login successful!');
+        router.push('/');
+      }
+    } catch (err) {
+      setError(err.response?.data?.error || 'Login failed');
     }
-  } catch (err) {
-    setError(err.response?.data?.error || 'Login failed');
-  }
-};
-
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-blue-100 px-4">
@@ -87,6 +85,14 @@ export default function LoginPage() {
               className="w-full px-4 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm text-black"
               placeholder="••••••••"
             />
+            <div className="text-right text-sm mt-1">
+              <a
+                href="/recovery"
+                className="text-blue-600 hover:underline"
+              >
+                Forgot Password?
+              </a>
+            </div>
           </motion.div>
 
           <motion.button
