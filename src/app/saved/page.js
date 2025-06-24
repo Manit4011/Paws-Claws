@@ -1,29 +1,37 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
+import UserContext from '@/context/userContext' // ✅ Add this
 import axios from 'axios'
+
 
 export default function SavedForLater() {
   const [savedPets, setSavedPets] = useState([])
   const [loading, setLoading] = useState(true)
+  const { user } = useContext(UserContext);
+  const actualUser = user?.user;
+
 
   // Hardcoded user ID — replace this with JWT-based user later
-  const userId = '685a51ac0426d2bb60d85009'
+  const userId = actualUser?._id;
+
 
   useEffect(() => {
     const fetchSavedPets = async () => {
-      try {
-        const response = await axios.get(`/api/saveforlater?userId=${userId}`)
-        setSavedPets(response.data)
-      } catch (error) {
-        console.error('Error fetching saved pets:', error)
-      } finally {
-        setLoading(false)
-      }
-    }
+      if (!userId) return;
 
-    fetchSavedPets()
-  }, [])
+      try {
+        const response = await axios.get(`/api/saveforlater?userId=${userId}`);
+        setSavedPets(response.data);
+      } catch (error) {
+        console.error('Error fetching saved pets:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchSavedPets();
+  }, [userId]); // 👈 Re-run when userId changes
 
   if (loading) {
     return <p className="text-center mt-10">Loading...</p>

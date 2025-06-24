@@ -1,97 +1,117 @@
 'use client';
 
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
+import UserContext from '@/context/userContext';
+import { useRouter } from 'next/navigation';
+import axios from 'axios';
 
-const centerLinks = [
-  { name: 'Home', href: '/' },
-  { name: 'Adopt', href: '/adopt' },
-  { name: 'About', href: '/about' },
-  { name: 'Contact', href: '/contact' },
-  {name: 'Saved',href : '/saved'},
-];
 
-const rightLinks = [
-  { name: 'Login', href: '/login' },
-  { name: 'Signup', href: '/signup' },
-];
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const {user, setUser} = useContext(UserContext);
+  const actualUser = user === undefined ? undefined : user?.user;
+  console.log("actualUser", actualUser);
+  const router = useRouter();
+
+  const handleLogout = async(e) =>{
+    e.preventDefault();
+    try {
+      const res = await axios.post('/api/auth/logout');
+      if (res.status === 200) {
+        console.log("Logout successful");
+        setUser(null); // Clear user context
+        router.push('/login'); // Redirect to login page
+      } else {
+        console.error("Logout failed");
+      }
+    } catch (error) {
+      console.error("Error during logout:", error);
+    }
+  }
 
   return (
-    <nav className="fixed top-0 z-50 w-full bg-black bg-opacity-80 shadow-lg backdrop-blur-lg">
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-        {/* Logo */}
-        <Link href="/" className="text-3xl font-bold text-white tracking-widest">
-          <span className="text-indigo-400 drop-shadow-[0_0_10px_rgba(99,102,241,0.8)]">
-            Paws
-          </span>
-          <span className="text-pink-400 drop-shadow-[0_0_10px_rgba(244,114,182,0.8)]">
-            &Claws
-          </span>
-        </Link>
+    <nav className="bg-white shadow-md fixed top-0 w-full z-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between h-16">
+          <div className="flex items-center">
+            <Link href="/" className="text-xl font-bold text-blue-600">
+              MyApp
+            </Link>
+          </div>
+          <div className="hidden md:flex space-x-4 items-center">
+            <Link href="/" className="text-gray-700 hover:text-blue-500">
+              Home
+            </Link>
+            <Link href="/about" className="text-gray-700 hover:text-blue-500">
+              About
+            </Link>
+            <Link href="/contact" className="text-gray-700 hover:text-blue-500">
+              Contact
+            </Link>
+          </div>
 
-        {/* Center Nav Links */}
-        <div className="hidden md:flex space-x-8 mx-auto">
-          {centerLinks.map((link) => (
-            <motion.div
-              key={link.name}
-              whileHover={{ scale: 1.1, color: '#a855f7' }}
-              className="text-white transition-all duration-300"
+
+          <div className="hidden md:flex space-x-4 items-center">
+            {user === undefined ? null : actualUser ? (
+              <>
+                <span className="text-gray-700">Welcome, {actualUser.name}
+                </span>
+                <button onClick={handleLogout} className="bg-red-500 text-white py-2 px-4 rounded-full hover:bg-red-400 transition">
+                  Logout
+                </button>
+
+              </>
+            ) : (
+              <>
+                <Link href="/login" className="bg-blue-500 text-white py-2 px-4 rounded-full hover:bg-blue-400 transition">
+                  Login
+                </Link>
+                <Link href="/signup" className="bg-cyan-500 text-black py-2 px-4 rounded-full hover:bg-cyan-400 transition">
+                  Sign Up
+                </Link>
+              </>
+            )}
+
+          </div>
+
+
+
+          {/* Mobile menu button */}
+          <div className="md:hidden flex items-center">
+            <button
+              onClick={() => setIsOpen(!isOpen)}
+              className="text-gray-700 hover:text-blue-500 focus:outline-none"
             >
-              <Link href={link.href}>{link.name}</Link>
-            </motion.div>
-          ))}
-        </div>
-
-        {/* Right Auth Links */}
-        <div className="hidden md:flex space-x-4">
-          {rightLinks.map((link) => (
-            <motion.div
-              key={link.name}
-              whileHover={{ scale: 1.1 }}
-              className="text-white transition-all duration-300"
-            >
-              <Link href={link.href}>{link.name}</Link>
-            </motion.div>
-          ))}
-        </div>
-
-        {/* Mobile Menu Button */}
-        <div className="md:hidden text-white">
-          <button onClick={() => setIsOpen(!isOpen)}>
-            {isOpen ? <X size={28} /> : <Menu size={28} />}
-          </button>
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                {isOpen ? (
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                ) : (
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                )}
+              </svg>
+            </button>
+          </div>
         </div>
       </div>
 
-      {/* Mobile Dropdown Menu */}
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div
-            initial={{ height: 0 }}
-            animate={{ height: 'auto' }}
-            exit={{ height: 0 }}
-            className="overflow-hidden md:hidden bg-black bg-opacity-90"
-          >
-            <div className="flex flex-col items-center space-y-4 py-4">
-              {[...centerLinks, ...rightLinks].map((link) => (
-                <motion.div
-                  key={link.name}
-                  whileTap={{ scale: 0.95 }}
-                  className="text-white text-lg"
-                  onClick={() => setIsOpen(false)}
-                >
-                  <Link href={link.href}>{link.name}</Link>
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {/* Mobile Menu */}
+      {isOpen && (
+        <div className="md:hidden px-2 pt-2 pb-3 space-y-1 bg-white shadow">
+          <Link href="/" className="block px-3 py-2 rounded-md text-gray-700 hover:text-blue-500">
+            Home
+          </Link>
+          <Link href="/about" className="block px-3 py-2 rounded-md text-gray-700 hover:text-blue-500">
+            About
+          </Link>
+          <Link href="/contact" className="block px-3 py-2 rounded-md text-gray-700 hover:text-blue-500">
+            Contact
+          </Link>
+        </div>
+      )}
     </nav>
   );
 }

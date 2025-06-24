@@ -1,16 +1,20 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import Image from 'next/image';
+import UserContext from '@/context/userContext'; // ✅ Import user context
 
 export default function PetTinder() {
+  const { user } = useContext(UserContext); // ✅ Get user from context
+  const actualUser = user?.user;
+  const userid = actualUser?._id; // ✅ Dynamic user ID
+
   const [pets, setPets] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [showAdoptionLink, setShowAdoptionLink] = useState(false);
   const [fade, setFade] = useState(true);
   const [message, setMessage] = useState('');
-  const [userid, setUserid] = useState('685a51ac0426d2bb60d85009');
 
   useEffect(() => {
     async function fetchPets() {
@@ -27,6 +31,12 @@ export default function PetTinder() {
   }, []);
 
   const saveForLater = async (pet) => {
+    if (!userid) {
+      setMessage('❌ Please log in to save pets.');
+      setTimeout(() => setMessage(''), 3000);
+      return;
+    }
+
     try {
       await axios.post('/api/saveforlater', {
         petName: pet.petName || pet.petname,
@@ -37,7 +47,7 @@ export default function PetTinder() {
         age: pet.age,
         imageUrl: pet.imageUrl,
         adoptionLink: pet.adoptionLink,
-        userid: userid
+        userid: userid,
       });
 
       setMessage('✅ Pet saved for later!');

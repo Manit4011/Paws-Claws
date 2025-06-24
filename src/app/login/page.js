@@ -3,11 +3,16 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import axios from 'axios';
+import { useRouter } from 'next/navigation';
+import { useContext } from 'react';
+import UserContext from '@/context/userContext';
 
 export default function LoginPage() {
+  const { setUser } = useContext(UserContext);
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const router = useRouter();
 
   const handleChange = (e) => {
     setFormData(prev => ({
@@ -17,16 +22,22 @@ export default function LoginPage() {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError('');
-    setSuccess('');
-    try {
-      const res = await axios.post('/api/login', formData);
+  e.preventDefault();
+  setError('');
+  setSuccess('');
+
+  try {
+    const res = await axios.post('/api/auth/login', formData);
+    if (res.status === 200) {
+      setUser(res.data); // ✅ Update user context right away
       setSuccess(res.data.message || 'Login successful!');
-    } catch (err) {
-      setError(err.response?.data?.error || 'Login failed');
+      router.push('/');
     }
-  };
+  } catch (err) {
+    setError(err.response?.data?.error || 'Login failed');
+  }
+};
+
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-blue-100 px-4">
