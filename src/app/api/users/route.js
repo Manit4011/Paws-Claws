@@ -8,40 +8,20 @@ const loadDB = async () => {
 }
 loadDB()
 
-export async function GET(request) {
-  // fetch all users from the database
-  let users = []
-  try {
-    users = await User.find() //getting all users into an array
-  } catch (error) {
-    return NextResponse.json({
-      message: "Error fetching users",
-      status: "error",
-      error: error.message
-    })
-  }
-  return NextResponse.json(users)
-}
-
 
 //creating a new user(sign up page)
 export async function POST(request) {
-  const { name, email, password, about, profileUrl } = await request.json();
-
   try {
-    // Check if a user with the same name or email already exists
-    const existingUser = await User.findOne({
-      $or: [{ name }, { email }]
-    });
-
-    if (existingUser) {
+    const { name, email, password, about, profileUrl } = await request.json();
+    if (!name || !email || !password) {
       return NextResponse.json({
-        message: "Username or email already exists",
-        status: "error"
-      }, { status: 409 }); // 409 = Conflict
+        error: "please fill all the fields"
+      },
+        { status: 400 }
+      );
     }
 
-    const newUser = new User({
+    const user = new User({
       name,
       email,
       password,
@@ -49,9 +29,18 @@ export async function POST(request) {
       profileUrl
     });
 
-    newUser.password = await bcrypt.hash(newUser.password, parseInt(process.env.BCRYPT_SALT));
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return NextResponse.json({
+        error: "user already exists with this email"
+      },
+        { status: 400 }
+      );
+    }
 
-    await newUser.save();
+    user.password = await bcrypt.hash(user.password, parseInt(process.env.BCRYPT_SALT));
+
+    await user.save();
 
     return NextResponse.json({
       message: "User Created",

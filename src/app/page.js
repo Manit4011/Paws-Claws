@@ -65,7 +65,7 @@ export default function PetTinder() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-r from-blue-100 to-purple-100 flex flex-col items-center justify-center p-6">
+    <div className="min-h-screen bg-gradient-to-r from-blue-100 to-purple-100 pt-20 flex flex-col items-center justify-center p-6">
       <h1 className="text-5xl font-extrabold mb-6 text-gray-800 tracking-wide drop-shadow-md">🐾 Paws & Claws</h1>
 
       {message && (
