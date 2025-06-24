@@ -10,6 +10,7 @@ const centerLinks = [
   { name: 'Adopt', href: '/adopt' },
   { name: 'About', href: '/about' },
   { name: 'Contact', href: '/contact' },
+  {name: 'Saved',href : '/saved'},
 ];
 
 const rightLinks = [
