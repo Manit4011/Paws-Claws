@@ -40,14 +40,14 @@ export default function SavedForLater() {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center min-h-screen">
+      <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-yellow-50 via-white to-yellow-100">
         <p className="text-gray-500 text-lg">Loading saved pets...</p>
       </div>
     )
   }
 
   return (
-    <main className="min-h-screen flex flex-col">
+    <main className="min-h-screen flex flex-col bg-gradient-to-br from-yellow-50 via-white to-yellow-100">
       <div className="flex-grow px-4 md:px-10 pt-24 pb-10 max-w-5xl mx-auto w-full">
 
         {savedPets.length === 0 ? (
@@ -73,7 +73,7 @@ export default function SavedForLater() {
             {savedPets.map((pet) => (
               <div
                 key={pet._id}
-                className="flex bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-lg transition group overflow-hidden"
+                className="flex bg-white border border-gray-200 rounded-xl shadow-sm group transition-transform duration-300 transform hover:-translate-y-1 hover:rotate-[0.6deg] hover:shadow-xl will-change-transform overflow-hidden"
               >
                 {/* Image */}
                 <div className="w-36 sm:w-44 h-36 sm:h-44 bg-gray-100 flex-shrink-0">
@@ -127,4 +127,3 @@ export default function SavedForLater() {
     </main>
   )
 }
-
