@@ -1,20 +1,15 @@
-'use client'
+'use client';
 
-import { useContext, useEffect, useState } from 'react'
-import UserContext from '@/context/userContext' // ✅ Add this
-import axios from 'axios'
-
+import { useContext, useEffect, useState } from 'react';
+import UserContext from '@/context/userContext';
+import axios from 'axios';
 
 export default function SavedForLater() {
-  const [savedPets, setSavedPets] = useState([])
-  const [loading, setLoading] = useState(true)
+  const [savedPets, setSavedPets] = useState([]);
+  const [loading, setLoading] = useState(true);
   const { user } = useContext(UserContext);
   const actualUser = user?.user;
-
-
-  // Hardcoded user ID — replace this with JWT-based user later
   const userId = actualUser?._id;
-
 
   useEffect(() => {
     const fetchSavedPets = async () => {
@@ -31,42 +26,67 @@ export default function SavedForLater() {
     };
 
     fetchSavedPets();
-  }, [userId]); // 👈 Re-run when userId changes
+  }, [userId]);
 
   if (loading) {
-    return <p className="text-center mt-10">Loading...</p>
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <p className="text-gray-600 text-lg">Loading saved pets...</p>
+      </div>
+    );
   }
 
   return (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold mb-4">Saved for Later</h1>
-      {savedPets.length === 0 ? (
-        <p className="text-gray-600">No pets saved yet.</p>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {savedPets.map((pet) => (
-            <div key={pet._id} className="border rounded-xl shadow p-4">
-              <img
-                src={pet.imageUrl}
-                alt={pet.petName}
-                className="w-full h-48 object-cover rounded-md"
-              />
-              <h2 className="text-xl font-semibold mt-2">{pet.petName}</h2>
-              <p className="text-gray-600">Breed: {pet.gender}</p>
-              <p className="text-gray-600">Location: {pet.location}</p>
-              <p className="text-gray-600">Age: {pet.age}</p>
-              <a
-                href={pet.adoptionLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-blue-600 hover:underline mt-2 block"
+    <main className="min-h-screen flex flex-col">
+      <div className="flex-grow px-4 md:px-10 pt-24 pb-10 max-w-5xl mx-auto w-full">
+        <h1 className="text-2xl font-bold text-center text-emerald-700 mb-8">Saved Pets</h1>
+
+        {savedPets.length === 0 ? (
+          <p className="text-gray-500 text-center text-sm mt-10">No saved pets yet.</p>
+        ) : (
+          <div className="space-y-4">
+            {savedPets.map((pet) => (
+              <div
+                key={pet._id}
+                className="flex bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden hover:shadow-md transition"
               >
-                Adopt
-              </a>
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
-  )
+                <div className="w-32 sm:w-40 h-32 sm:h-40 bg-gray-100 flex-shrink-0">
+                  <img
+                    src={pet.imageUrl}
+                    alt={pet.petName}
+                    className="w-full h-full object-contain"
+                  />
+                </div>
+
+                <div className="p-4 flex flex-col justify-between text-sm w-full">
+                  <div>
+                    <h2 className="text-lg font-semibold text-emerald-700">
+                      {pet.petName}
+                    </h2>
+                    <p className="text-gray-600">Gender: {pet.gender}</p>
+                    <p className="text-gray-600">Age: {pet.age}</p>
+                    <p className="text-gray-600">Location: {pet.location}</p>
+                  </div>
+                  <div>
+                    <a
+                      href={pet.adoptionLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-emerald-600 mt-2 inline-block font-medium hover:underline"
+                    >
+                      View Adoption Page
+                    </a>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      <footer className="bg-black text-gray-400 text-xs text-center py-4 border-t border-gray-800">
+        © {new Date().getFullYear()} Paws&Claws. All rights reserved.
+      </footer>
+    </main>
+  );
 }
