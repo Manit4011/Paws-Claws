@@ -4,6 +4,8 @@ import { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import Image from 'next/image';
 import UserContext from '@/context/userContext'; // ✅ Import user context
+import Loader from '@/components/Loader';
+
 
 export default function PetTinder() {
   const { user } = useContext(UserContext); // ✅ Get user from context
@@ -71,12 +73,14 @@ export default function PetTinder() {
   const currentPet = pets[currentIndex];
 
   if (!currentPet) {
-    return <p className="text-center mt-20 text-xl">Loading pets...</p>;
-  }
+  return <Loader />;
+}
+
 
   return (
-    <div className="min-h-screen bg-gradient-to-r from-blue-100 to-purple-100 pt-20 flex flex-col items-center justify-center p-6">
-      <h1 className="text-5xl font-extrabold mb-6 text-gray-800 tracking-wide drop-shadow-md">🐾 Paws & Claws</h1>
+    <div className="min-h-screen pt-20 flex flex-col items-center justify-center p-6 bg-[radial-gradient(ellipse_at_top_left,_var(--tw-gradient-stops))] from-yellow-100 via-yellow-100 to-cyan-200 animate-gradient-x">
+
+      
 
       {message && (
         <div className="mb-4 px-5 py-2 rounded-lg bg-green-100 text-green-800 font-medium shadow-md">
