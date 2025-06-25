@@ -56,20 +56,36 @@ export default function AboutPage() {
       </section>
 
       {/* Team Section */}
-      <section className="mt-20 max-w-4xl mx-auto text-center">
-        <h2 className="text-3xl font-bold text-gray-800 mb-6">Meet the Creator</h2>
-        <div className="flex flex-col sm:flex-row items-center gap-6 justify-center">
-          <img
-            src="/your-avatar.png"
-            alt="Creator"
-            className="w-28 h-28 rounded-full border-4 border-yellow-400 shadow-md object-cover"
-          />
-          <div>
+      <section className="mt-20 max-w-5xl mx-auto text-center">
+        <h2 className="text-3xl font-bold text-gray-800 mb-10">Meet the Creators</h2>
+        <div className="grid sm:grid-cols-2 gap-10 items-start justify-center">
+          {/* Manit Nayak */}
+          <div className="flex flex-col items-center text-center px-4">
+            <img
+              src="/your-avatar.png"
+              alt="Manit Nayak"
+              className="w-28 h-28 rounded-full border-4 border-yellow-400 shadow-md object-cover mb-4"
+            />
             <h3 className="text-xl font-semibold text-gray-700">Manit Nayak</h3>
             <p className="text-gray-500 text-sm">Full Stack Developer & Animal Lover</p>
-            <p className="text-gray-600 mt-2 max-w-md">
+            <p className="text-gray-600 mt-2">
               I built this platform to combine my love for coding and compassion for animals.
               Let’s build a better future for our furry friends together! 🐕🐾
+            </p>
+          </div>
+
+          {/* Aditya Gautam */}
+          <div className="flex flex-col items-center text-center px-4">
+            <img
+              src="/aditya-avatar.png"
+              alt="Aditya Gautam"
+              className="w-28 h-28 rounded-full border-4 border-emerald-400 shadow-md object-cover mb-4"
+            />
+            <h3 className="text-xl font-semibold text-gray-700">Aditya Gautam</h3>
+            <p className="text-gray-500 text-sm">Full Stack Developer & UI Enthusiast</p>
+            <p className="text-gray-600 mt-2">
+              As a developer and animal lover, I’m proud to co-create this platform that connects paws with people.
+              Let's continue innovating for a kinder world. 🐾❤️
             </p>
           </div>
         </div>
