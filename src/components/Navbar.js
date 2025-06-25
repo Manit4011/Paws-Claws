@@ -7,6 +7,8 @@ import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import UserContext from '@/context/userContext';
 import { motion, AnimatePresence } from 'framer-motion';
+import LogoAnimation from './LogoAnimation'; // adjust the path as needed
+
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -36,6 +38,7 @@ export default function Navbar() {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex justify-between items-center">
         {/* Brand */}
+        <LogoAnimation />
         <Link href="/" className="text-2xl font-semibold tracking-wide flex items-center space-x-1">
           <span className="text-amber-400">Paws</span>
           <span className="text-emerald-400">&Claws</span>

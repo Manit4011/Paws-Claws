@@ -3,6 +3,8 @@
 import { useContext, useEffect, useState } from 'react';
 import UserContext from '@/context/userContext';
 import axios from 'axios';
+import { DotLottieReact } from '@lottiefiles/dotlottie-react';
+
 
 export default function SavedForLater() {
   const [savedPets, setSavedPets] = useState([]);
@@ -39,12 +41,23 @@ export default function SavedForLater() {
   return (
     <main className="min-h-screen flex flex-col">
       <div className="flex-grow px-4 md:px-10 pt-24 pb-10 max-w-5xl mx-auto w-full">
-        <h1 className="text-2xl font-bold text-center text-emerald-700 mb-8">Saved Pets</h1>
+        
 
         {savedPets.length === 0 ? (
-          <p className="text-gray-500 text-center text-sm mt-10">No saved pets yet.</p>
+          <div className="flex flex-col items-center justify-center mt-10 space-y-4">
+            <h1 className="text-2xl font-bold text-center text-emerald-700 mb-8">No Saved Pets</h1>
+            <div className="w-60 h-60">
+              <DotLottieReact
+                src="https://lottie.host/b2205db2-ff85-41eb-bf90-0929398db84f/uvYRXlDJiy.lottie"
+                loop
+                autoplay
+              />
+            </div>
+            <p className="text-gray-500 text-sm text-center">No saved pets yet. Go save some furry friends 🐾</p>
+          </div>
         ) : (
           <div className="space-y-4">
+            <h1 className="text-2xl font-bold text-center text-emerald-700 mb-8">Your Saved Pets</h1>
             {savedPets.map((pet) => (
               <div
                 key={pet._id}
@@ -82,6 +95,7 @@ export default function SavedForLater() {
             ))}
           </div>
         )}
+
       </div>
 
       <footer className="bg-black text-gray-400 text-xs text-center py-4 border-t border-gray-800">
