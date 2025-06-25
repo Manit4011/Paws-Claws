@@ -7,8 +7,7 @@ import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import UserContext from '@/context/userContext';
 import { motion, AnimatePresence } from 'framer-motion';
-import LogoAnimation from './LogoAnimation'; // adjust the path as needed
-
+import LogoAnimation from './LogoAnimation'; 
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -25,9 +24,12 @@ export default function Navbar() {
         router.push('/login');
       }
     } catch (error) {
-      console.error("Logout failed:", error);
+      console.error('Logout failed:', error);
     }
   };
+
+  // Prevent early rendering before user is known
+  if (user === undefined) return null;
 
   return (
     <motion.nav
@@ -44,7 +46,7 @@ export default function Navbar() {
           <span className="text-emerald-400">&Claws</span>
         </Link>
 
-        {/* Center Nav Links */}
+        {/* Center Links (Desktop) */}
         <div className="hidden md:flex flex-1 justify-center space-x-6 text-sm font-medium text-gray-300">
           <Link href="/" className="hover:text-emerald-400 transition">Home</Link>
           <Link href="/about" className="hover:text-emerald-400 transition">About</Link>
@@ -56,14 +58,18 @@ export default function Navbar() {
 
         {/* Right Section */}
         <div className="hidden md:flex items-center space-x-4">
-          {user === undefined ? null : actualUser ? (
+          {actualUser ? (
             <>
               <div className="flex items-center space-x-2">
-                <img
-                  src={actualUser.profileUrl || '/default-avatar.png'}
-                  alt="User"
-                  className="w-9 h-9 rounded-full object-cover border border-gray-600"
-                />
+                {actualUser.profileUrl ? (
+                  <img
+                    src={actualUser.profileUrl}
+                    alt="User"
+                    className="w-9 h-9 rounded-full object-cover border border-gray-600 transition-opacity duration-300"
+                  />
+                ) : (
+                  <div className="w-9 h-9 rounded-full bg-gray-700 border border-gray-600 animate-pulse" />
+                )}
                 <span className="text-sm text-gray-300 font-medium">{actualUser.name}</span>
               </div>
               <button
@@ -116,14 +122,18 @@ export default function Navbar() {
               <Link href="/saved" className="block py-2 hover:text-emerald-400" onClick={() => setIsOpen(false)}>Saved Pets</Link>
             )}
 
-            {user === undefined ? null : actualUser ? (
+            {actualUser ? (
               <>
                 <div className="flex items-center space-x-2 mt-4">
-                  <img
-                    src={actualUser.profileUrl || '/default-avatar.png'}
-                    alt="User"
-                    className="w-8 h-8 rounded-full object-cover border border-gray-600"
-                  />
+                  {actualUser.profileUrl ? (
+                    <img
+                      src={actualUser.profileUrl}
+                      alt="User"
+                      className="w-8 h-8 rounded-full object-cover border border-gray-600"
+                    />
+                  ) : (
+                    <div className="w-8 h-8 rounded-full bg-gray-700 border border-gray-600 animate-pulse" />
+                  )}
                   <p className="text-sm text-gray-300 font-medium">{actualUser.name}</p>
                 </div>
                 <button
