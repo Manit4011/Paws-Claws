@@ -1,41 +1,63 @@
-import axios from "axios";
-import * as cheerio from "cheerio";
+// app/api/scrape/route.ts or route.js
+import puppeteer from "puppeteer";
+import ConnectDB from "@/lib/db";
 import { NextResponse } from "next/server";
+
+const loadDB = async () => {
+  try {
+    await ConnectDB();
+    console.log("MongoDB connected");
+  } catch (error) {
+    console.error("Error connecting to MongoDB:", error);
+  }
+};
+
+loadDB();
+
+export const runtime = "nodejs";
 
 export async function GET() {
   try {
-    const targetUrl = "https://thepetnest.com/adopt-a-dog";
-    const scraperUrl = `https://api.scraperapi.com?api_key=9c21b2984ad7a6c82676e4b27d3db2e9&url=${encodeURIComponent(targetUrl)}`;
-
-    const { data: html } = await axios.get(scraperUrl);
-    const $ = cheerio.load(html);
-
-    const pets = [];
-
-    $(".pet__item").each((_, el) => {
-      const pet = $(el);
-
-      // ✅ Safely construct image URL
-      let imageUrl = pet.find(".pet__image").attr("src") || "";
-      if (imageUrl && !imageUrl.startsWith("http")) {
-        imageUrl = `https://thepetnest.com${imageUrl}`;
-      }
-
-      pets.push({
-        petName: pet.find(".pet__name").text().trim() || "N/A",
-        postedOn: pet.find(".date-tag").text().replace("Posted on:", "").trim() || "N/A",
-        imageUrl: imageUrl || null, // ensure it's valid
-        gender: pet.find(".pet-meta-details span").eq(0).text().trim() || "N/A",
-        age: pet.find(".pet-meta-details span").eq(2).text().trim() || "N/A",
-        location: pet.find(".pet-meta-details").eq(2).text().trim() || "N/A",
-        ownerName: pet.find(".owner-name b span").text().trim() || "N/A",
-        adoptionLink: pet.find("a.more-details-btn").attr("href") || "N/A",
-      });
+    const browser = await puppeteer.launch({
+      headless: true,
+      args: ["--no-sandbox", "--disable-setuid-sandbox"],
     });
 
+    const page = await browser.newPage();
+
+    await page.goto("https://thepetnest.com/adopt-a-dog", {
+      waitUntil: "networkidle2",
+    });
+
+    const pets = await page.evaluate(() => {
+      const petElements = document.querySelectorAll(".pet__item");
+      const petData = [];
+
+      petElements.forEach((pet) => {
+        petData.push({
+          petName: pet.querySelector(".pet__name")?.innerText.trim() || "N/A",
+          postedOn:
+            pet.querySelector(".date-tag")?.innerText.replace("Posted on:", "").trim() || "N/A",
+          imageUrl: pet.querySelector(".pet__image")?.src || "N/A",
+          gender:
+            pet.querySelector(".pet-meta-details span:nth-child(1)")?.innerText.trim() || "N/A",
+          age:
+            pet.querySelector(".pet-meta-details span:nth-child(3)")?.innerText.trim() || "N/A",
+          location:
+            pet.querySelector(".pet-meta-details:nth-child(3)")?.innerText.trim() || "N/A",
+          ownerName: pet.querySelector(".owner-name b span")?.innerText.trim() || "N/A",
+          adoptionLink: pet.querySelector("a.more-details-btn")?.href || "N/A",
+        });
+      });
+
+      return petData;
+    });
+
+    await browser.close();
+
     return NextResponse.json({ pets });
-  } catch (err) {
-    console.error("Scraping error:", err.message);
-    return NextResponse.json({ error: err.message }, { status: 500 });
+  } catch (error) {
+    console.error("Scraping error:", error);
+    return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
