@@ -35,6 +35,6 @@ export const config = {
     "/api/:path*",
     "/adopt",
     "/saveforlater",
-    "/"
+    "/adopt"
   ]
 };
