@@ -10,7 +10,6 @@ export async function GET(request){
     const user = await User.findById(data.id).select("-password");
 
     return NextResponse.json({
-        authToken: authToken,
-        user
+        user: user
     })
 }

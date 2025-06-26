@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import axios from 'axios'
+import { useRouter } from 'next/navigation'
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState('')
@@ -10,6 +11,7 @@ export default function ForgotPasswordPage() {
   const [step, setStep] = useState(1)
   const [message, setMessage] = useState('')
   const [error, setError] = useState('')
+  const router = useRouter();
 
   const sendOTP = async () => {
     setError('')
@@ -35,6 +37,7 @@ export default function ForgotPasswordPage() {
         newPassword,
       })
       setMessage(res.data.message)
+      router.push('/login');
     } catch (err) {
       setError(err.response?.data?.error || 'Failed to reset password')
     }

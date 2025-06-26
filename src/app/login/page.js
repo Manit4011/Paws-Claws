@@ -28,7 +28,7 @@ export default function LoginPage() {
     try {
       const res = await axios.post('/api/auth/login', formData);
       if (res.status === 200) {
-        setUser(res.data);
+        setUser({ user: res.data.user }); // <-- fixes the structure
         setSuccess(res.data.message || 'Login successful!');
         router.push('/');
       }

@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import UserContext from '@/context/userContext';
 import { motion, AnimatePresence } from 'framer-motion';
-import LogoAnimation from './LogoAnimation'; 
+import LogoAnimation from './LogoAnimation';
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -28,7 +28,6 @@ export default function Navbar() {
     }
   };
 
-  // Prevent early rendering before user is known
   if (user === undefined) return null;
 
   return (
@@ -39,18 +38,22 @@ export default function Navbar() {
       className="bg-[#1e1e1e]/90 backdrop-blur-lg text-white fixed top-0 w-full z-50 border-b border-gray-700 shadow-sm font-sans"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex justify-between items-center">
-        {/* Brand */}
-        <LogoAnimation />
-        <Link href="/" className="text-2xl font-semibold tracking-wide flex items-center space-x-1">
-          <span className="text-amber-400">Paws</span>
-          <span className="text-emerald-400">&Claws</span>
-        </Link>
+        
+        {/* Left Section: Logo */}
+        <div className="flex items-center space-x-2">
+          <LogoAnimation />
+          <Link href="/" className="text-2xl font-semibold tracking-wide flex items-center space-x-1">
+            <span className="text-amber-400">Paws</span>
+            <span className="text-emerald-400">&Claws</span>
+          </Link>
+        </div>
 
         {/* Center Links (Desktop) */}
         <div className="hidden md:flex flex-1 justify-center space-x-6 text-sm font-medium text-gray-300">
           <Link href="/" className="hover:text-emerald-400 transition">Home</Link>
           <Link href="/about" className="hover:text-emerald-400 transition">About</Link>
           <Link href="/contact" className="hover:text-emerald-400 transition">Contact</Link>
+          <Link href="/adopt" className="hover:text-emerald-400 transition">Adopt</Link>
           {actualUser && (
             <Link href="/saved" className="hover:text-emerald-400 transition">Saved Pets</Link>
           )}
@@ -118,6 +121,7 @@ export default function Navbar() {
             <Link href="/" className="block py-2 hover:text-emerald-400" onClick={() => setIsOpen(false)}>Home</Link>
             <Link href="/about" className="block py-2 hover:text-emerald-400" onClick={() => setIsOpen(false)}>About</Link>
             <Link href="/contact" className="block py-2 hover:text-emerald-400" onClick={() => setIsOpen(false)}>Contact</Link>
+            <Link href="/adopt" className="block py-2 hover:text-emerald-400" onClick={() => setIsOpen(false)}>Adopt</Link>
             {actualUser && (
               <Link href="/saved" className="block py-2 hover:text-emerald-400" onClick={() => setIsOpen(false)}>Saved Pets</Link>
             )}
